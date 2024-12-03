@@ -3,6 +3,7 @@ import json
 import scrapy
 from urllib.parse import unquote
 from hashlib import md5
+import jsonlines
 
 # subtype = "https://bigredliquors.com/shop/?subtype=whiskey&skip=0"
 subtype = "whiskey"
@@ -18,7 +19,7 @@ class BigRed(scrapy.Spider):
             "https://bigredliquors.com/shop/?subtype=whiskey",
         ]
         for url in urls:
-            for i in range(0,1000,18):
+            for i in range(0,10000,18):
               url2 = f"{url}&skip={i}&order={order}"
               yield scrapy.Request(url=url2, callback=self.parse)
     def extract_text(self, response, beg, end):
@@ -48,15 +49,21 @@ class BigRed(scrapy.Spider):
         # self.log(f"Found {len(results)} results")
         # Check if the div "no-products" exists. If so stop scraping with CloseSpider exception
         # if response.xpath("//*[contains(text(), 'No products to show')]").get():
-        if 'No proudcts to show' in response.text:
-           self.log(f'Found empty page')
-           raise scrapy.exceptions.CloseSpider('End of products')
+        # self.log(f'No products to show? {'No products to show'.lower() in response.text.lower()}')
+        # if 'No proudcts to show' in response.text:
+          #  self.log(f'Found empty page')
+          #  raise scrapy.exceptions.CloseSpider('End of products')
         beg = "JSON.parse(decodeURIComponent(\""
         end = "\"));"
         parsed = self.extract_text(response, beg, end)
         decoded_json = unquote(parsed)
-        data = json.loads(decoded_json)
-        Path(f'results/{md5(decoded_json.encode()).hexdigest()}.json').write_text(json.dumps(data, indent=9))
+        data = json.loads(decoded_json)['products']
+        if len(data) == 0:
+           self.log('Found empty page now.')
+           raise scrapy.exceptions.CloseSpider('End of products')
+        with jsonlines.open('output.jsonl',mode='a') as writer:
+           writer.write_all(data)
+        # Path(f'results/{md5(decoded_json.encode()).hexdigest()}.json').write_text(json.dumps(data, indent=9))
         # Path('result').write_text(decoded_json)
         # page = response.url.split("/")[-2]
         # filename = f"quotes-{page}.html"
