@@ -5,6 +5,8 @@ from urllib.parse import unquote
 from hashlib import md5
 import jsonlines
 import datetime
+from pymongo import MongoClient
+import os
 
 # subtype = "https://bigredliquors.com/shop/?subtype=whiskey&skip=0"
 subtype = "whiskey"
@@ -12,7 +14,7 @@ order = "name+asc"
 style = "list"
 # cookie
 # stores = ["5e92445578e8f13c2cb1e14c","5e92506478e8f13c2cb1e150"]
-stores = ["5e92506478e8f13c2cb1e150"]
+stores = ["5e92544978e8f13c2cb1e16c"]
 
 class BigRed(scrapy.Spider):
     name = "br"
@@ -73,11 +75,14 @@ class BigRed(scrapy.Spider):
         if len(data) == 0:
            self.log('Found empty page now.')
            raise scrapy.exceptions.CloseSpider('End of products')
-        with jsonlines.open('output.jsonl',mode='a') as writer:
-           writer.write_all(new_data)
-        # Path(f'results/{md5(decoded_json.encode()).hexdigest()}.json').write_text(json.dumps(data, indent=9))
-        # Path('result').write_text(decoded_json)
-        # page = response.url.split("/")[-2]
-        # filename = f"quotes-{page}.html"
-        # Path(filename).write_bytes(json.dumps(results))
-        # self.log(f"Saved file {filename}")
+        # Probably need to do something fancy to avoid creating a ton of connections but here we are
+        client = MongoClient()
+        import os
+        pw = os.environ['PW']
+        cnstg = f"mongodb+srv://codyburker:{pw}@cluster0.phkpa.mongodb.net/"
+        client = MongoClient(cnstg)
+        db = client.bigred
+        collection = db.bigred
+        collection.insert_many(new_data)
+        # with jsonlines.open('output.jsonl',mode='a') as writer:
+        #    writer.write_all(new_data)
