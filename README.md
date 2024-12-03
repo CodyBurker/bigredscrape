@@ -5,7 +5,14 @@
 - [X] Scrape single page
 - [1/2] Scrape multiple pages (429 retry failures not handled gracefully)
 - [1/2] Inject store id cookie (Can choose a store, can't loop over stores though)
-- [ ] Insert into mongodb
+- [X] Insert into mongodb
+
+### Data modeling
+- [ ] Load into flat tables (or at least easier to read mongo collections)
+- Product table
+    - Price
+    - Date...Trend?
+    
 
 ### Streamlit App
 - [ ] Design UI
@@ -14,6 +21,7 @@
 
 ## UI Goals
 * Price per store
+* Price per product
 * Export to csv?
 
 ## Cookies
