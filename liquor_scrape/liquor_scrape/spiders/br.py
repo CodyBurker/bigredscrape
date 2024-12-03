@@ -10,7 +10,9 @@ subtype = "whiskey"
 order = "name+asc"
 style = "list"
 # cookie
-store = "5e92445578e8f13c2cb1e14c"
+# stores = ["5e92445578e8f13c2cb1e14c","5e92506478e8f13c2cb1e150"]
+stores = ["5e92506478e8f13c2cb1e150"]
+
 class BigRed(scrapy.Spider):
     name = "br"
 
@@ -21,7 +23,9 @@ class BigRed(scrapy.Spider):
         for url in urls:
             for i in range(0,10000,18):
               url2 = f"{url}&skip={i}&order={order}"
-              yield scrapy.Request(url=url2, callback=self.parse)
+              for store in stores:
+                self.log(f'Checking store: {store}: skip:{i}')
+                yield scrapy.Request(url=url2, callback=self.parse, cookies={'ch_currentMerchantId': store})
     def extract_text(self, response, beg, end):
       """
       Extracts text from a string between two delimiters.
