@@ -1,6 +1,7 @@
 # bigredscrape
 
-ch_currentMerchantId
+cookie for store: ch_currentMerchantId
+
 | store | id |
 | --- | --- |
 | bloomington1 | 5e92445578e8f13c2cb1e14c |
