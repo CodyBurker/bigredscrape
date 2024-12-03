@@ -1,2 +1,3 @@
 .venv/
 __pycache__
+liquor_scrape/liquor_scrape/results/
