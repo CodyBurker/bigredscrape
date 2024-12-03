@@ -1,3 +1,4 @@
 Scrapy
 jsonlines
 pymongo[srv]
+ipykernel
