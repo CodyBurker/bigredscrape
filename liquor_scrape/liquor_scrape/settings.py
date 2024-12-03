@@ -50,9 +50,10 @@ ROBOTSTXT_OBEY = True
 
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
-#DOWNLOADER_MIDDLEWARES = {
-#    "liquor_scrape.middlewares.LiquorScrapeDownloaderMiddleware": 543,
-#}
+DOWNLOADER_MIDDLEWARES = {
+   "liquor_scrape.middlewares.LiquorScrapeDownloaderMiddleware": None,
+   "liquor_scrape.middlewares.TooManyRequestsRetryMiddleware": 429
+}
 
 # Enable or disable extensions
 # See https://docs.scrapy.org/en/latest/topics/extensions.html
@@ -90,3 +91,5 @@ ROBOTSTXT_OBEY = True
 # Set settings whose default value is deprecated to a future-proof value
 TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
 FEED_EXPORT_ENCODING = "utf-8"
+
+RETRY_HTTP_CODES = [429]

@@ -2,6 +2,7 @@ from pathlib import Path
 import json
 import scrapy
 from urllib.parse import unquote
+from hashlib import md5
 
 # subtype = "https://bigredliquors.com/shop/?subtype=whiskey&skip=0"
 subtype = "whiskey"
@@ -14,10 +15,12 @@ class BigRed(scrapy.Spider):
 
     def start_requests(self):
         urls = [
-            "https://bigredliquors.com/shop/?subtype=whiskey&skip=0",
+            "https://bigredliquors.com/shop/?subtype=whiskey",
         ]
         for url in urls:
-            yield scrapy.Request(url=url, callback=self.parse)
+            for i in range(0,1000,18):
+              url2 = f"{url}&skip={i}&order={order}"
+              yield scrapy.Request(url=url2, callback=self.parse)
     def extract_text(self, response, beg, end):
       """
       Extracts text from a string between two delimiters.
@@ -49,7 +52,7 @@ class BigRed(scrapy.Spider):
          
         decoded_json = unquote(parsed)
         data = json.loads(decoded_json)
-        Path('result.json').write_text(json.dumps(data, indent=9))
+        Path(f'results/{md5(decoded_json.encode()).hexdigest()}.json').write_text(json.dumps(data, indent=9))
         # Path('result').write_text(decoded_json)
         # page = response.url.split("/")[-2]
         # filename = f"quotes-{page}.html"
