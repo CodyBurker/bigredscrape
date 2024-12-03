@@ -4,7 +4,7 @@
 ### Scraping
 - [X] Scrape single page
 - [1/2] Scrape multiple pages (429 retry failures not handled gracefully)
-- [ ] Inject store id cookie
+- [1/2] Inject store id cookie (Can choose a store, can't loop over stores though)
 - [ ] Insert into mongodb
 
 ### Streamlit App
