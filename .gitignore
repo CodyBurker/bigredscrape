@@ -4,3 +4,4 @@ liquor_scrape/liquor_scrape/results/
 /__pychache__/
 __pycache__/
 liquor_scrape/liquor_scrape/spiders/__pycache__/*
+liquor_scrape/liquor_scrape/spiders/__pycache__/br.cpython-312.pyc
