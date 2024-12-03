@@ -1,4 +1,5 @@
 .venv/
 __pycache__
 liquor_scrape/liquor_scrape/results/
-__pychache__/
+/__pychache__/
+__pycache__/
