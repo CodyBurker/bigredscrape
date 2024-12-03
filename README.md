@@ -3,7 +3,7 @@
 ## Todo
 ### Scraping
 - [X] Scrape single page
-- [ ] Inject multiple pages
+- [1/2] Scrape multiple pages (429 retry failures not handled gracefully)
 - [ ] Inject store id cookie
 - [ ] Insert into mongodb
 

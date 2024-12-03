@@ -121,6 +121,7 @@ class TooManyRequestsRetryMiddleware(RetryMiddleware):
             return response
         elif response.status == 429:
             self.crawler.engine.pause()
+            spider.log(f'Pausing: {response}')
             time.sleep(60) # If the rate limit is renewed in a minute, put 60 seconds, and so on.
             self.crawler.engine.unpause()
             reason = response_status_message(response.status)

@@ -38,7 +38,7 @@ class BigRed(scrapy.Spider):
         result = results[0]
         start_index = result.find(beg) + len(beg)
         end_index = result.find(end, start_index)
-        self.log(f"Beg: {start_index}:\t{end_index}")
+        # self.log(f"Beg: {start_index}:\t{end_index}")
         if start_index != -1 and end_index != -1:
           return result[start_index:end_index]
       return None
@@ -46,10 +46,14 @@ class BigRed(scrapy.Spider):
     def parse(self, response):
         # results = [x for x in response.css('script').getall() if 'ch-elements.search-results' in x]
         # self.log(f"Found {len(results)} results")
+        # Check if the div "no-products" exists. If so stop scraping with CloseSpider exception
+        # if response.xpath("//*[contains(text(), 'No products to show')]").get():
+        if 'No proudcts to show' in response.text:
+           self.log(f'Found empty page')
+           raise scrapy.exceptions.CloseSpider('End of products')
         beg = "JSON.parse(decodeURIComponent(\""
         end = "\"));"
         parsed = self.extract_text(response, beg, end)
-         
         decoded_json = unquote(parsed)
         data = json.loads(decoded_json)
         Path(f'results/{md5(decoded_json.encode()).hexdigest()}.json').write_text(json.dumps(data, indent=9))
