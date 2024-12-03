@@ -4,6 +4,7 @@ import scrapy
 from urllib.parse import unquote
 from hashlib import md5
 import jsonlines
+import datetime
 
 # subtype = "https://bigredliquors.com/shop/?subtype=whiskey&skip=0"
 subtype = "whiskey"
@@ -62,11 +63,18 @@ class BigRed(scrapy.Spider):
         parsed = self.extract_text(response, beg, end)
         decoded_json = unquote(parsed)
         data = json.loads(decoded_json)['products']
+        # Surface merchant id(s) to top level too
+        new_data = []
+        for item in data:
+          new_item = item
+          new_item['merchant_id'] = item['merchants'][0]['merchant_id']
+          new_item['date'] = datetime.date.today().strftime('%Y-%m-%d')
+          new_data.append(new_item)
         if len(data) == 0:
            self.log('Found empty page now.')
            raise scrapy.exceptions.CloseSpider('End of products')
         with jsonlines.open('output.jsonl',mode='a') as writer:
-           writer.write_all(data)
+           writer.write_all(new_data)
         # Path(f'results/{md5(decoded_json.encode()).hexdigest()}.json').write_text(json.dumps(data, indent=9))
         # Path('result').write_text(decoded_json)
         # page = response.url.split("/")[-2]
