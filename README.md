@@ -1,5 +1,22 @@
 # bigredscrape
 
+## Todo
+### Scraping
+- [X] Scrape single page
+- [ ] Inject multiple pages
+- [ ] Inject store id cookie
+- [ ] Insert into mongodb
+
+### Streamlit App
+- [ ] Design UI
+- [ ] Connect to mongodb
+- [ ] Implement UI
+
+## UI Goals
+* Price per store
+* Export to csv?
+
+## Cookies
 cookie for store: ch_currentMerchantId
 
 | store | id |
